@@ -1,99 +1,111 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useToast } from '@/hooks/use-toast'
-import { useAuth } from '@/context/auth-context'
-import { getAccounts, getUserProfile } from '@/lib/actions'
-import { Copy, Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/auth-context";
+import { getAccounts, getUserProfile } from "@/lib/actions";
+import { Copy, Loader2, CheckCircle2, XCircle } from "lucide-react";
 
 export default function TestingPage() {
-  const { user } = useAuth()
-  const { toast } = useToast()
-  const [loading, setLoading] = useState(false)
-  const [apiKey, setApiKey] = useState('')
-  const [accounts, setAccounts] = useState<any[]>([])
-  const [accountId, setAccountId] = useState('')
-  const [amount, setAmount] = useState('1')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [response, setResponse] = useState<any>(null)
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [accounts, setAccounts] = useState<any[]>([]);
+  const [accountId, setAccountId] = useState("");
+  const [amount, setAmount] = useState("1");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [response, setResponse] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
       const fetchData = async () => {
-        const profile = await getUserProfile(user.uid)
+        const profile = await getUserProfile(user.uid);
         if (profile?.apiKey) {
-          setApiKey(profile.apiKey)
+          setApiKey(profile.apiKey);
         }
 
-        const userAccounts = await getAccounts(user.uid)
-        setAccounts(userAccounts)
+        const userAccounts = await getAccounts(user.uid);
+        setAccounts(userAccounts);
         if (userAccounts.length > 0) {
-          setAccountId(userAccounts[0].id)
+          setAccountId(userAccounts[0].id);
         }
-      }
-      fetchData()
+      };
+      fetchData();
     }
-  }, [user])
+  }, [user]);
 
   const handleTest = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setResponse(null)
+    e.preventDefault();
+    setLoading(true);
+    setResponse(null);
 
     try {
-      const res = await fetch('/api/test-stk-push', {
-        method: 'POST',
+      const res = await fetch("https://api.pexmon.one/api/mpesa/stkPush", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          "x-api-key": `${apiKey}`,
         },
         body: JSON.stringify({
-          apiKey,
           accountId,
           amount: parseFloat(amount),
           phoneNumber,
         }),
-      })
+      });
 
-      const data = await res.json()
-      setResponse(data)
+      const data = await res.json();
+      setResponse(data);
 
       if (res.ok) {
         toast({
-          title: 'Request sent!',
-          description: 'STK push has been initiated successfully.',
-        })
+          title: "Request sent!",
+          description: "STK push has been initiated successfully.",
+        });
       } else {
         toast({
-          title: 'Error',
-          description: data.error || 'Failed to send STK push.',
-          variant: 'destructive',
-        })
+          title: "Error",
+          description: data.error || "Failed to send STK push.",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       toast({
-        title: 'Error',
-        description: 'Failed to test STK push. Please try again.',
-        variant: 'destructive',
-      })
+        title: "Error",
+        description: "Failed to test STK push. Please try again.",
+        variant: "destructive",
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const copyCode = (code: string) => {
-    navigator.clipboard.writeText(code)
+    navigator.clipboard.writeText(code);
     toast({
-      title: 'Copied!',
-      description: 'Code copied to clipboard.',
-    })
-  }
+      title: "Copied!",
+      description: "Code copied to clipboard.",
+    });
+  };
 
   const nodeJsCode = `const axios = require('axios');
 
@@ -102,13 +114,13 @@ const stkPush = async () => {
     const response = await axios.post(
       'https://pexhub-api.onrender.com/api/mpesa/stkPush',
       {
-        amount: ${amount || '1'},
-        phoneNumber: '${phoneNumber || '254712345678'}',
-        accountId: '${accountId || 'YOUR_ACCOUNT_ID'}'
+        amount: ${amount || "1"},
+        phoneNumber: '${phoneNumber || "254712345678"}',
+        accountId: '${accountId || "YOUR_ACCOUNT_ID"}'
       },
       {
         headers: {
-          'x-api-key': '${apiKey || 'YOUR_API_KEY_HERE'}'
+          'x-api-key': '${apiKey || "YOUR_API_KEY_HERE"}'
         }
       }
     );
@@ -119,20 +131,20 @@ const stkPush = async () => {
   }
 };
 
-stkPush();`
+stkPush();`;
 
   const pythonCode = `import requests
 
 def stk_push():
     url = 'https://pexhub-api.onrender.com/api/mpesa/stkPush'
     headers = {
-        'x-api-key': '${apiKey || 'YOUR_API_KEY_HERE'}',
+        'x-api-key': '${apiKey || "YOUR_API_KEY_HERE"}',
         'Content-Type': 'application/json'
     }
     data = {
-        'amount': ${amount || '1'},
-        'phoneNumber': '${phoneNumber || '254712345678'}',
-        'accountId': '${accountId || 'YOUR_ACCOUNT_ID'}'
+        'amount': ${amount || "1"},
+        'phoneNumber': '${phoneNumber || "254712345678"}',
+        'accountId': '${accountId || "YOUR_ACCOUNT_ID"}'
     }
 
     try:
@@ -142,16 +154,16 @@ def stk_push():
     except requests.exceptions.RequestException as e:
         print('Error:', e)
 
-stk_push()`
+stk_push()`;
 
   const curlCode = `curl -X POST https://pexhub-api.onrender.com/api/mpesa/stkPush \\
-  -H "x-api-key: ${apiKey || 'YOUR_API_KEY_HERE'}" \\
+  -H "x-api-key: ${apiKey || "YOUR_API_KEY_HERE"}" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "amount": ${amount || '1'},
-    "phoneNumber": "${phoneNumber || '254712345678'}",
-    "accountId": "${accountId || 'YOUR_ACCOUNT_ID'}"
-  }'`
+    "amount": ${amount || "1"},
+    "phoneNumber": "${phoneNumber || "254712345678"}",
+    "accountId": "${accountId || "YOUR_ACCOUNT_ID"}"
+  }'`;
 
   return (
     <div className="p-8">
@@ -187,17 +199,19 @@ stk_push()`
                     readOnly
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="accountId">Account</Label>
                   <Select onValueChange={setAccountId} value={accountId}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Select an account" />
+                      <SelectValue placeholder="Select an account" />
                     </SelectTrigger>
                     <SelectContent>
-                        {accounts.map(acc => (
-                            <SelectItem key={acc.id} value={acc.id}>{acc.name} - {acc.id}</SelectItem>
-                        ))}
+                      {accounts.map((acc) => (
+                        <SelectItem key={acc.id} value={acc.id}>
+                          {acc.name} - {acc.id}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -241,7 +255,7 @@ stk_push()`
                       Sending...
                     </>
                   ) : (
-                    'Send STK Push'
+                    "Send STK Push"
                   )}
                 </Button>
               </form>
@@ -259,7 +273,7 @@ stk_push()`
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
                     )}
                     <span className="font-semibold">
-                      {response.error ? 'Error' : 'Success'}
+                      {response.error ? "Error" : "Success"}
                     </span>
                   </div>
                   <pre className="text-xs overflow-auto">
@@ -351,5 +365,5 @@ stk_push()`
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
