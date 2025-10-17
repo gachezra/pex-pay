@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
   try {
     const body: CustomCallbackBody = await req.json();
 
-    const { userId, plan, isAnnual, apiKey, mpesaCallback } = body;
+    const { userId, plan, isAnnual, mpesaCallback } = body;
 
     if (mpesaCallback.Body.stkCallback.ResultCode === 0) {
       // Payment was successful
-      await generateApiKey(userId, plan, apiKey, isAnnual);
+      await generateApiKey(userId, plan, isAnnual);
       return NextResponse.json({ message: 'Webhook received and processed successfully.' });
     } else {
       // Payment failed or was cancelled

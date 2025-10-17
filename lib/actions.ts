@@ -117,9 +117,10 @@ export const getUserProfile = async (userId: string) => {
   return null;
 };
 
-export const generateApiKey = async (userId: string, plan: string, apiKey: string, isAnnual: boolean) => {
+export const generateApiKey = async (userId: string, plan: string, isAnnual: boolean) => {
   const userRef = doc(db, 'users', userId);
   const userSnap = await getDoc(userRef);
+  const creationSecret = process.env.SECRET_KEY
 
   if (!userSnap.exists()) {
     throw new Error("User not found");
@@ -131,14 +132,34 @@ export const generateApiKey = async (userId: string, plan: string, apiKey: strin
     throw new Error("Free trial has already been used.");
   }
 
-  const expiryDate = new Date();
+  let expiresInDays;
   if (plan === 'trial') {
-    expiryDate.setDate(expiryDate.getDate() + 14);
+    expiresInDays = 14;
   } else if (plan === 'pro' && isAnnual) {
-    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+    expiresInDays = 365;
   } else if (plan === 'pro' && !isAnnual) {
-    expiryDate.setMonth(expiryDate.getMonth() + 1);
+    expiresInDays = 30;
+  } else {
+    throw new Error("Invalid plan specified.");
   }
+
+  const response = await fetch('https://api.pexmon.one/api/auth/generate-key', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-generation-secret': `${creationSecret}`, // Replace with your actual secret key
+    },
+    body: JSON.stringify({ userId, expiresInDays }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to generate API key.');
+  }
+
+  const { apiKey, expiresAt } = await response.json();
+
+  const expiryDate = new Date(expiresAt);
 
   const updateData: any = {
     apiKey: apiKey,
