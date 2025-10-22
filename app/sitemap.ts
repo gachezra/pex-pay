@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://https://pay.pexmon.one/";
+  const baseUrl = "https://pay.pexmon.one/";
 
   const staticRoutes = [
     "",
