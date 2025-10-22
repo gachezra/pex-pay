@@ -9,8 +9,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { setWebhookUrl as updateWebhookUrl } from '@/lib/actions';
 import { auth } from '@/lib/firebase/client';
+import withAuth from '@/components/auth/withAuth';
 
-export default function SettingsPage() {
+function SettingsPage() {
   const { toast } = useToast();
   const [webhookUrl, setWebhookUrl] = useState('');
   const [loadingWebhook, setLoadingWebhook] = useState(false);
@@ -63,3 +64,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+export default withAuth(SettingsPage);

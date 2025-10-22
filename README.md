@@ -68,7 +68,7 @@ const axios = require('axios');
 const stkPush = async () => {
   try {
     const response = await axios.post(
-      'https://pexhub-api.onrender.com/api/mpesa/stkPush',
+      'https://api.pexmon.one/api/mpesa/stkPush',
       {
         amount: 1,
         phoneNumber: '254712345678',
@@ -96,7 +96,7 @@ stkPush();
 import requests
 
 def stk_push():
-    url = 'https://pexhub-api.onrender.com/api/mpesa/stkPush'
+    url = 'https://api.pexmon.one/api/mpesa/stkPush'
     headers = {
         'x-api-key': 'YOUR_API_KEY_HERE',
         'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ stk_push()
 ### cURL
 
 ```bash
-curl -X POST https://pexhub-api.onrender.com/api/mpesa/stkPush \
+curl -X POST https://api.pexmon.one/api/mpesa/stkPush \
   -H "x-api-key: YOUR_API_KEY_HERE" \
   -H "Content-Type: application/json" \
   -d '{

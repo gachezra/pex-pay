@@ -153,7 +153,7 @@ export default function SignUpPage() {
               By creating an account, you agree to our{' '}
               <Link href='/toc' className='underline hover:text-foreground'>
                 Terms of Service
-              </Link>{' '}
+              </Link>
               and{' '}
               <Link href='/privacy' className='underline hover:text-foreground'>
                 Privacy Policy

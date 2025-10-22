@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -20,22 +20,22 @@ export default function ApiKeysPage() {
   const [expiryDate, setExpiryDate] = useState<Date | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = useCallback(async () => {
     if (user) {
       setLoading(true)
       const profile = await getUserProfile(user.uid)
       if (profile) {
         setApiKey(profile.apiKey || '')
         setPlan(profile.plan || '')
-        setExpiryDate(profile.apiKeyExpiry ? profile.apiKeyExpiry.toDate() : null)
+        setExpiryDate(profile.apiKeyExpiry ? new Date(profile.apiKeyExpiry) : null)
       }
       setLoading(false)
     }
-  }
+  }, [user])
 
   useEffect(() => {
     fetchUserProfile()
-  }, [user])
+  }, [fetchUserProfile])
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)

@@ -15,11 +15,11 @@ const withAuth = <P extends object>(WrappedComponent: React.ComponentType<P>) =>
       }
     }, [user, loading, router]);
 
-    if (loading) {
-      return <div>Loading...</div>; 
+    if (loading || !user) {
+      return null;
     }
 
-    return user ? <WrappedComponent {...props} /> : null;
+    return <WrappedComponent {...props} />;
   };
 
   return WithAuthComponent;

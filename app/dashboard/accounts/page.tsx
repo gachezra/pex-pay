@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/context/auth-context';
 import { getAccounts } from '@/lib/actions';
 import { AddAccountModal } from '@/components/accounts/add-account-modal';
@@ -23,16 +23,16 @@ export default function AccountsPage() {
   const [accounts, setAccounts] = useState<any[]>([]);
   const { toast } = useToast();
 
-  const fetchAccounts = async () => {
+  const fetchAccounts = useCallback(async () => {
     if (user) {
       const fetchedAccounts = await getAccounts(user.uid);
       setAccounts(fetchedAccounts);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchAccounts();
-  }, [user]);
+  }, [fetchAccounts]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);

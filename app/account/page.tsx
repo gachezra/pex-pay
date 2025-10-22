@@ -26,6 +26,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { addAccount } from '@/lib/actions';
 import { auth } from '@/lib/firebase/client';
+import withAuth from '@/components/auth/withAuth';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -42,7 +43,7 @@ const formSchema = z.object({
   return true;
 }, { message: 'Business number and account number are required for business accounts.', path: ['businessNumber'] });
 
-export default function AccountSetupPage() {
+function AccountSetupPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -181,3 +182,5 @@ export default function AccountSetupPage() {
     </div>
   );
 }
+
+export default withAuth(AccountSetupPage);

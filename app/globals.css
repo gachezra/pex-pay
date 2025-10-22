@@ -1,25 +1,12 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 35%;
+    --foreground: 0 0% 20%;
     --card: 200 15% 85%;
     --card-foreground: 0 0% 35%;
     --popover: 0 0% 100%;
@@ -38,7 +25,7 @@
     --input: 200 15% 75%;
     --ring: 173 23% 50%;
     --gold: 52 65% 70%;
-    --radius: 0.5rem;
+    --radius: 0.4rem;
   }
   .dark {
     --background: 0 0% 0%;
@@ -62,13 +49,11 @@
     --ring: 0 0% 100%;
     --gold: 0 0% 100%;
   }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 0.95rem;
   }
 }

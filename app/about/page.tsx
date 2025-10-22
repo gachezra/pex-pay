@@ -47,7 +47,7 @@ export default function AboutPage() {
             Simplifying M-Pesa Payments for Developers
           </h1>
           <p className='text-xl text-muted-foreground max-w-3xl mx-auto'>
-            We're on a mission to make mobile money integration simple, secure, and accessible for every business in Kenya.
+            We&apos;re on a mission to make mobile money integration simple, secure, and accessible for every business in Kenya.
           </p>
         </motion.div>
 

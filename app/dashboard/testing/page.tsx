@@ -1,40 +1,41 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/context/auth-context";
-import { getAccounts, getUserProfile } from "@/lib/actions";
-import { Copy, Loader2, CheckCircle2, XCircle } from "lucide-react";
+} from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/auth-context';
+import { getAccounts, getUserProfile, initiateStkPush } from '@/lib/actions';
+import { Copy, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function TestingPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [apiKey, setApiKey] = useState("");
+  const [apiKey, setApiKey] = useState('');
   const [accounts, setAccounts] = useState<any[]>([]);
-  const [accountId, setAccountId] = useState("");
-  const [amount, setAmount] = useState("1");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [accountId, setAccountId] = useState('');
+  const [amount, setAmount] = useState('1');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [response, setResponse] = useState<any>(null);
+  const baseUrl = 'https://';
 
   useEffect(() => {
     if (user) {
@@ -60,39 +61,23 @@ export default function TestingPage() {
     setResponse(null);
 
     try {
-      const res = await fetch("https://api.pexmon.one/api/mpesa/stkPush", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": `${apiKey}`,
-        },
-        body: JSON.stringify({
-          accountId,
-          amount: parseFloat(amount),
-          phoneNumber,
-        }),
+      const data = await initiateStkPush({
+        apiKey,
+        accountId,
+        amount: parseFloat(amount),
+        phoneNumber,
       });
-
-      const data = await res.json();
       setResponse(data);
-
-      if (res.ok) {
-        toast({
-          title: "Request sent!",
-          description: "STK push has been initiated successfully.",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: data.error || "Failed to send STK push.",
-          variant: "destructive",
-        });
-      }
-    } catch (error: any) {
       toast({
-        title: "Error",
-        description: "Failed to test STK push. Please try again.",
-        variant: "destructive",
+        title: 'Request sent!',
+        description: 'STK push has been initiated successfully.',
+      });
+    } catch (error: any) {
+      setResponse({ error: error.message });
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to send STK push.',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -102,8 +87,8 @@ export default function TestingPage() {
   const copyCode = (code: string) => {
     navigator.clipboard.writeText(code);
     toast({
-      title: "Copied!",
-      description: "Code copied to clipboard.",
+      title: 'Copied!',
+      description: 'Code copied to clipboard.',
     });
   };
 
@@ -112,15 +97,15 @@ export default function TestingPage() {
 const stkPush = async () => {
   try {
     const response = await axios.post(
-      'https://pexhub-api.onrender.com/api/mpesa/stkPush',
+      '${baseUrl}/api/mpesa/stkPush',
       {
-        amount: ${amount || "1"},
-        phoneNumber: '${phoneNumber || "254712345678"}',
-        accountId: '${accountId || "YOUR_ACCOUNT_ID"}'
+        amount: ${amount || '1'},
+        phoneNumber: '${phoneNumber || '254712345678'}',
+        accountId: '${accountId || 'YOUR_ACCOUNT_ID'}'
       },
       {
         headers: {
-          'x-api-key': '${apiKey || "YOUR_API_KEY_HERE"}'
+          'x-api-key': '${apiKey || 'YOUR_API_KEY_HERE'}'
         }
       }
     );
@@ -136,15 +121,15 @@ stkPush();`;
   const pythonCode = `import requests
 
 def stk_push():
-    url = 'https://pexhub-api.onrender.com/api/mpesa/stkPush'
+    url = '${baseUrl}/api/mpesa/stkPush'
     headers = {
-        'x-api-key': '${apiKey || "YOUR_API_KEY_HERE"}',
+        'x-api-key': '${apiKey || 'YOUR_API_KEY_HERE'}',
         'Content-Type': 'application/json'
     }
     data = {
-        'amount': ${amount || "1"},
-        'phoneNumber': '${phoneNumber || "254712345678"}',
-        'accountId': '${accountId || "YOUR_ACCOUNT_ID"}'
+        'amount': ${amount || '1'},
+        'phoneNumber': '${phoneNumber || '254712345678'}',
+        'accountId': '${accountId || 'YOUR_ACCOUNT_ID'}'
     }
 
     try:
@@ -156,13 +141,13 @@ def stk_push():
 
 stk_push()`;
 
-  const curlCode = `curl -X POST https://pexhub-api.onrender.com/api/mpesa/stkPush \\
-  -H "x-api-key: ${apiKey || "YOUR_API_KEY_HERE"}" \\
+  const curlCode = `curl -X POST ${baseUrl}/api/mpesa/stkPush \\
+  -H "x-api-key: ${apiKey || 'YOUR_API_KEY_HERE'}" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "amount": ${amount || "1"},
-    "phoneNumber": "${phoneNumber || "254712345678"}",
-    "accountId": "${accountId || "YOUR_ACCOUNT_ID"}"
+    "amount": ${amount || '1'},
+    "phoneNumber": "${phoneNumber || '254712345678'}",
+    "accountId": "${accountId || 'YOUR_ACCOUNT_ID'}"
   }'`;
 
   return (
@@ -255,7 +240,7 @@ stk_push()`;
                       Sending...
                     </>
                   ) : (
-                    "Send STK Push"
+                    'Send STK Push'
                   )}
                 </Button>
               </form>
@@ -273,7 +258,7 @@ stk_push()`;
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
                     )}
                     <span className="font-semibold">
-                      {response.error ? "Error" : "Success"}
+                      {response.error ? 'Error' : 'Success'}
                     </span>
                   </div>
                   <pre className="text-xs overflow-auto">
@@ -357,7 +342,7 @@ stk_push()`;
               </CardHeader>
               <CardContent>
                 <code className="p-3 bg-muted rounded block text-sm">
-                  POST https://pexhub-api.onrender.com/api/mpesa/stkPush
+                  POST {baseUrl}/api/mpesa/stkPush
                 </code>
               </CardContent>
             </Card>

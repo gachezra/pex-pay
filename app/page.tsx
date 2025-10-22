@@ -287,7 +287,7 @@ export default function Home() {
                 >
                   <Card className="h-full hover:shadow-lg transition-shadow">
                     <CardContent className="p-6">
-                      <p className="text-lg mb-4 italic">\"{testimonial.quote}\"</p>
+                      <p className="text-lg mb-4 italic">&quot;{testimonial.quote}&quot;</p>
                       <div className="border-t pt-4">
                         <p className="font-semibold">{testimonial.author}</p>
                         <p className="text-sm text-muted-foreground">{testimonial.role}</p>
