@@ -20,13 +20,16 @@ export const metadata: Metadata = {
     siteName: "PexPay",
     images: [
       {
-        url: "https://pay.pexmon.one/og-image.png",
+        url: "https://pay.pexmon.one/preview.png",
         width: 800,
         height: 600,
       },
     ],
     locale: "en_US",
     type: "website",
+  },
+  icons: {
+    icon: "https://pay.pexmon.one/favicon.png",
   },
 };
 
