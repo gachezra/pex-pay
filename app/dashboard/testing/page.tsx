@@ -342,7 +342,7 @@ stk_push()`;
               </CardHeader>
               <CardContent>
                 <code className="p-3 bg-muted rounded block text-sm">
-                  POST {baseUrl}api/mpesa/stkPush
+                  POST {baseUrl}/api/mpesa/stkPush
                 </code>
               </CardContent>
             </Card>
